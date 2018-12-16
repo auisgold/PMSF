@@ -362,10 +362,8 @@ class RDM extends Scanner
         raid_end_timestamp AS raid_end,
         raid_battle_timestamp AS raid_start,
         updated AS last_scanned,
-        raid_pokemon_id,
-        guarding_pokemon_id AS guard_pokemon_id,
-        availble_slots AS slots_available,
-        team_id,
+	raid_pokemon_id,
+	team_id,
         raid_level,
         raid_pokemon_move_1,
         raid_pokemon_move_2,
@@ -382,24 +380,17 @@ class RDM extends Scanner
         $i = 0;
 
         foreach ($gyms as $gym) {
-            $guard_pid = $gym["guard_pokemon_id"];
-            if ($guard_pid == "0") {
-                $guard_pid = null;
-                $gym["guard_pokemon_id"] = null;
-            }
             $raid_pid = $gym["raid_pokemon_id"];
             if ($raid_pid == "0") {
                 $raid_pid = null;
                 $gym["raid_pokemon_id"] = null;
-            }
-            $gym["team_id"] = intval($gym["team_id"]);
+	    }
+	    $gym["team_id"] = 0;
             $gym["pokemon"] = [];
-            $gym["guard_pokemon_name"] = empty($guard_pid) ? null : i8ln($this->data[$guard_pid]["name"]);
             $gym["raid_pokemon_name"] = empty($raid_pid) ? null : i8ln($this->data[$raid_pid]["name"]);
             $gym["latitude"] = floatval($gym["latitude"]);
             $gym["longitude"] = floatval($gym["longitude"]);
             //$gym["sponsor"] = intval($gym["sponsor"]);
-            $gym["slots_available"] = intval($gym["slots_available"]);
             $gym["last_modified"] = $gym["last_modified"] * 1000;
             $gym["last_scanned"] = $gym["last_scanned"] * 1000;
             $gym["raid_start"] = $gym["raid_start"] * 1000;
@@ -414,7 +405,7 @@ class RDM extends Scanner
         return $data;
     }
 
-    private function query_gym_defenders($gymId, $select)
+   /* private function query_gym_defenders($gymId, $select)
     {
         global $db;
 
@@ -459,7 +450,7 @@ class RDM extends Scanner
             $i++;
         }
         return $data;
-    }
+   }*/
 
     public function get_gyms_api($swLat, $swLng, $neLat, $neLng)
     {
@@ -520,7 +511,7 @@ class RDM extends Scanner
         pokemon_id AS raid_pokemon_id,
         raid_battle_timestamp AS raid_start,
         raid_end_timestamp AS raid_end,
-        raid_pokemon_cp,
+	raid_pokemon_cp,
         raid_pokemon_move_1,
         raid_pokemon_move_2
         FROM gym
